@@ -1,6 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, Alert, ScrollView, StyleSheet } from 'react-native';
 
+// Interfaz para el tipo de dificultad
+interface Difficulty {
+  name: string;
+  words: number;
+  time: number;
+  color: string;
+  bank: string[];
+}
+
 // Banco de 100 palabras para NOVATO
 const WORDS_NOVATO = [
   'CASA', 'PERRO', 'GATO', 'LIBRO', 'MESA', 'SILLA', 'ARBOL', 'FLOR', 'AGUA', 'FUEGO',
@@ -59,8 +68,8 @@ const WORDS_EXTRA = [
 
 const GRID_SIZE = 10;
 
-const generateWordSearch = (words) => {
-  const grid = Array(GRID_SIZE).fill(null).map(() => 
+const generateWordSearch = (words: string[]): string[][] => {
+  const grid: string[][] = Array(GRID_SIZE).fill(null).map(() => 
     Array(GRID_SIZE).fill(null).map(() => 
       String.fromCharCode(65 + Math.floor(Math.random() * 26))
     )
@@ -86,14 +95,14 @@ const generateWordSearch = (words) => {
   return grid;
 };
 
-const canPlaceWord = (grid, word, row, col, direction) => {
+const canPlaceWord = (grid: string[][], word: string, row: number, col: number, direction: number): boolean => {
   if (direction === 0 && col + word.length > GRID_SIZE) return false;
   if (direction === 1 && row + word.length > GRID_SIZE) return false;
   if (direction === 2 && (row + word.length > GRID_SIZE || col + word.length > GRID_SIZE)) return false;
   return true;
 };
 
-const placeWord = (grid, word, row, col, direction) => {
+const placeWord = (grid: string[][], word: string, row: number, col: number, direction: number): void => {
   if (direction === 0) {
     for (let i = 0; i < word.length; i++) grid[row][col + i] = word[i];
   } else if (direction === 1) {
@@ -103,20 +112,34 @@ const placeWord = (grid, word, row, col, direction) => {
   }
 };
 
-const getRandomWords = (wordsBank, count) => {
+const getRandomWords = (wordsBank: string[], count: number): string[] => {
   const shuffled = [...wordsBank].sort(() => 0.5 - Math.random());
   return shuffled.slice(0, count);
 };
 
-const WordSearchGame = ({ difficulty, wordsCount, timeLimit, wordsBank, onBack }) => {
-  const [words, setWords] = useState([]);
-  const [grid, setGrid] = useState([]);
-  const [foundWords, setFoundWords] = useState([]);
-  const [selectedCells, setSelectedCells] = useState([]);
+interface WordSearchGameProps {
+  difficulty: string;
+  wordsCount: number;
+  timeLimit: number;
+  wordsBank: string[];
+  onBack: () => void;
+}
+
+const WordSearchGame: React.FC<WordSearchGameProps> = ({ 
+  difficulty, 
+  wordsCount, 
+  timeLimit, 
+  wordsBank, 
+  onBack 
+}) => {
+  const [words, setWords] = useState<string[]>([]);
+  const [grid, setGrid] = useState<string[][]>([]);
+  const [foundWords, setFoundWords] = useState<string[]>([]);
+  const [selectedCells, setSelectedCells] = useState<string[]>([]);
   const [timeLeft, setTimeLeft] = useState(timeLimit);
   const [isPlaying, setIsPlaying] = useState(true);
   const [roundsCompleted, setRoundsCompleted] = useState(0);
-  const timerRef = useRef(null);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     initGame();
@@ -179,7 +202,7 @@ const WordSearchGame = ({ difficulty, wordsCount, timeLimit, wordsBank, onBack }
     setIsPlaying(true);
   };
 
-  const handleCellPress = (row, col) => {
+  const handleCellPress = (row: number, col: number) => {
     if (!isPlaying) return;
     
     const cellKey = `${row}-${col}`;
@@ -194,7 +217,7 @@ const WordSearchGame = ({ difficulty, wordsCount, timeLimit, wordsBank, onBack }
     }
   };
 
-  const checkWord = (cells) => {
+  const checkWord = (cells: string[]) => {
     const word = cells.map(cell => {
       const parts = cell.split('-');
       const row = Number(parts[0]);
@@ -264,9 +287,9 @@ const WordSearchGame = ({ difficulty, wordsCount, timeLimit, wordsBank, onBack }
 };
 
 export default function App() {
-  const [selectedDifficulty, setSelectedDifficulty] = useState(null);
+  const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty | null>(null);
 
-  const difficulties = [
+  const difficulties: Difficulty[] = [
     { name: 'NOVATO', words: 4, time: 30, color: '#FFD700', bank: WORDS_NOVATO },
     { name: 'AVANZADO', words: 6, time: 25, color: '#90EE90', bank: WORDS_AVANZADO },
     { name: 'EXPERTO', words: 9, time: 20, color: '#FF6B6B', bank: WORDS_EXPERTO },
