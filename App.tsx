@@ -66,7 +66,7 @@ const WORDS_EXTRA = [
   'MAC', 'NFC', 'OGG', 'PDF', 'QOS', 'ROM', 'SIM', 'TCP', 'URL', 'VGA'
 ];
 
-const GRID_SIZE = 10;
+const GRID_SIZE = 6;
 
 const generateWordSearch = (words: string[]): string[][] => {
   const grid: string[][] = Array(GRID_SIZE).fill(null).map(() => 
