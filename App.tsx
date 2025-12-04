@@ -1,15 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, Alert, ScrollView, StyleSheet } from 'react-native';
 
-// Interfaz para el tipo de dificultad
-interface Difficulty {
-  name: string;
-  words: number;
-  time: number;
-  color: string;
-  bank: string[];
-}
-
 // Banco de 100 palabras para NOVATO
 const WORDS_NOVATO = [
   'CASA', 'PERRO', 'GATO', 'LIBRO', 'MESA', 'SILLA', 'ARBOL', 'FLOR', 'AGUA', 'FUEGO',
@@ -24,7 +15,6 @@ const WORDS_NOVATO = [
   'LAPIZ', 'PAPEL', 'CUADERNO', 'BOLSA', 'RELOJ', 'TELEFONO', 'COMPU', 'TECLADO', 'RATON', 'PANTALLA'
 ];
 
-// Banco de 100 palabras para AVANZADO
 const WORDS_AVANZADO = [
   'AVENTURA', 'BATALLA', 'CAMPEON', 'DESAFIO', 'ENERGIA', 'FUERZA', 'GUERRERO', 'HEROE', 'IMPERIO', 'JUSTICIA',
   'KINGDOM', 'LEYENDA', 'MAGIA', 'NACION', 'ORDEN', 'PODER', 'QUEST', 'REINO', 'SABIDURIA', 'TESORO',
@@ -38,7 +28,6 @@ const WORDS_AVANZADO = [
   'NINJA', 'OLIMPO', 'PRINCIPE', 'QUEEN', 'REY', 'SAMURAI', 'TRONO', 'UNION', 'VICTORIA', 'ZEUS'
 ];
 
-// Banco de 100 palabras para EXPERTO
 const WORDS_EXPERTO = [
   'ABISMO', 'BESTIA', 'CAOS', 'DEMONIO', 'ECLIPSE', 'FENIX', 'GENESIS', 'HECHIZO', 'INFERNO', 'JUICIO',
   'KARMA', 'LEGION', 'MITOLOGIA', 'NEXUS', 'OMEGA', 'PROFECIA', 'QUANTUM', 'RITUAL', 'SANGRE', 'TALISMAN',
@@ -52,7 +41,6 @@ const WORDS_EXPERTO = [
   'MYSTIC', 'NIGHTMARE', 'ONSLAUGHT', 'PARADOX', 'QUEST', 'REQUIEM', 'SANCTUM', 'TITAN', 'ULTIMA', 'VALOR'
 ];
 
-// Banco de 100 palabras para EXTRA
 const WORDS_EXTRA = [
   'ACERO', 'BRISA', 'CIELO', 'DANZA', 'ESPEJO', 'FARO', 'GRITO', 'HIELO', 'ISLA', 'JADE',
   'KILO', 'LAGO', 'MURO', 'NIDO', 'ORO', 'PAZ', 'QUESO', 'ROCA', 'SEDA', 'TINTA',
@@ -67,6 +55,17 @@ const WORDS_EXTRA = [
 ];
 
 const GRID_SIZE = 8;
+
+interface Difficulty {
+  name: string;
+  words: number;
+  time: number;
+  color: string;
+  headerColor: string;
+  gridBgColor: string;
+  wordsBgColor: string;
+  bank: string[];
+}
 
 const generateWordSearch = (words: string[]): string[][] => {
   const grid: string[][] = Array(GRID_SIZE).fill(null).map(() => 
@@ -122,6 +121,9 @@ interface WordSearchGameProps {
   wordsCount: number;
   timeLimit: number;
   wordsBank: string[];
+  headerColor: string;
+  gridBgColor: string;
+  wordsBgColor: string;
   onBack: () => void;
 }
 
@@ -129,7 +131,10 @@ const WordSearchGame: React.FC<WordSearchGameProps> = ({
   difficulty, 
   wordsCount, 
   timeLimit, 
-  wordsBank, 
+  wordsBank,
+  headerColor,
+  gridBgColor,
+  wordsBgColor,
   onBack 
 }) => {
   const [words, setWords] = useState<string[]>([]);
@@ -233,55 +238,87 @@ const WordSearchGame: React.FC<WordSearchGameProps> = ({
     });
   };
 
+  const isExperto = difficulty === 'experto';
+
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>{difficulty.toUpperCase()}</Text>
-        <Text style={styles.timer}>Tiempo: {timeLeft}s</Text>
-        {difficulty === 'extra' && (
-          <Text style={styles.rounds}>Ronda: {roundsCompleted + 1}/5</Text>
-        )}
+    <ScrollView style={styles.gameContainer}>
+      {/* Header */}
+      <View style={[styles.gameHeader, { backgroundColor: headerColor }]}>
+        <Text style={styles.gameTitle}>{difficulty.toUpperCase()}</Text>
       </View>
 
-      <View style={styles.wordsContainer}>
-        <Text style={styles.wordsTitle}>Palabras a encontrar:</Text>
-        <View style={styles.wordsList}>
-          {words.map((word, idx) => (
-            <Text 
-              key={idx} 
-              style={[
-                styles.word,
-                foundWords.includes(word) && styles.wordFound
-              ]}
-            >
-              {word}
-            </Text>
-          ))}
+      {/* Timer Bar - Mostrar para todos los niveles excepto en extra que tiene su propio formato */}
+      {difficulty !== 'extra' ? (
+        <View style={styles.timerBar}>
+          <Text style={styles.timerText}>TIEMPO: {timeLeft} SEG</Text>
         </View>
-      </View>
+      ) : (
+        <View style={styles.timerBar}>
+          <Text style={styles.timerText}>TIEMPO RESTANTE: {timeLeft} SEG</Text>
+        </View>
+      )}
 
-      <View style={styles.gridContainer}>
-        {grid.map((row, rowIdx) => (
-          <View key={rowIdx} style={styles.row}>
-            {row.map((cell, colIdx) => (
-              <TouchableOpacity
-                key={`${rowIdx}-${colIdx}`}
-                style={[
-                  styles.cell,
-                  selectedCells.includes(`${rowIdx}-${colIdx}`) && styles.cellSelected
-                ]}
-                onPress={() => handleCellPress(rowIdx, colIdx)}
-              >
-                <Text style={styles.cellText}>{cell}</Text>
-              </TouchableOpacity>
+      {/* Main Content */}
+      <View style={[styles.gameContent, { backgroundColor: gridBgColor }]}>
+        {/* Grid */}
+        <View style={styles.gridWrapper}>
+          <View style={styles.gridContainer}>
+            {grid.map((row, rowIdx) => (
+              <View key={rowIdx} style={styles.gridRow}>
+                {row.map((cell, colIdx) => (
+                  <TouchableOpacity
+                    key={`${rowIdx}-${colIdx}`}
+                    style={[
+                      styles.gridCell,
+                      selectedCells.includes(`${rowIdx}-${colIdx}`) && styles.gridCellSelected
+                    ]}
+                    onPress={() => handleCellPress(rowIdx, colIdx)}
+                  >
+                    <Text style={styles.gridCellText}>{cell}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
             ))}
           </View>
-        ))}
-      </View>
+        </View>
 
-      <TouchableOpacity style={styles.backButton} onPress={onBack}>
-        <Text style={styles.backButtonText}>REGRESAR</Text>
-      </TouchableOpacity>
+        {/* Words Section */}
+        <View style={styles.wordsSection}>
+          <View style={[styles.wordsSectionHeader, { backgroundColor: wordsBgColor }]}>
+            <Text style={styles.wordsSectionTitle}>PALABRAS A ENCONTRAR:</Text>
+          </View>
+          
+          <View style={[
+            styles.wordsGrid,
+            isExperto && styles.wordsGridExperto
+          ]}>
+            {words.map((word, idx) => (
+              <View
+                key={idx}
+                style={[
+                  styles.wordBox,
+                  { backgroundColor: foundWords.includes(word) ? '#4CAF50' : wordsBgColor }
+                ]}
+              >
+                <Text style={[
+                  styles.wordBoxText,
+                  foundWords.includes(word) && styles.wordBoxTextFound
+                ]}>
+                  {word}
+                </Text>
+              </View>
+            ))}
+          </View>
+        </View>
+
+        {/* Back Button */}
+        <TouchableOpacity 
+          style={[styles.backButton, { backgroundColor: headerColor }]}
+          onPress={onBack}
+        >
+          <Text style={styles.backButtonText}>REGRESAR</Text>
+        </TouchableOpacity>
+      </View>
     </ScrollView>
   );
 };
@@ -290,10 +327,46 @@ export default function App() {
   const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty | null>(null);
 
   const difficulties: Difficulty[] = [
-    { name: 'NOVATO', words: 4, time: 30, color: '#FFD700', bank: WORDS_NOVATO },
-    { name: 'AVANZADO', words: 6, time: 25, color: '#90EE90', bank: WORDS_AVANZADO },
-    { name: 'EXPERTO', words: 9, time: 20, color: '#FF6B6B', bank: WORDS_EXPERTO },
-    { name: 'EXTRA', words: 3, time: 10, color: '#9B59B6', bank: WORDS_EXTRA }
+    { 
+      name: 'NOVATO', 
+      words: 3, 
+      time: 45, 
+      color: '#FFD700',
+      headerColor: '#FFD700',
+      gridBgColor: '#FFE87C',
+      wordsBgColor: '#FFD700',
+      bank: WORDS_NOVATO 
+    },
+    { 
+      name: 'AVANZADO', 
+      words: 5, 
+      time: 35, 
+      color: '#90EE90',
+      headerColor: '#90EE90',
+      gridBgColor: '#B8F3B8',
+      wordsBgColor: '#70C070',
+      bank: WORDS_AVANZADO 
+    },
+    { 
+      name: 'EXPERTO', 
+      words: 7, 
+      time: 30, 
+      color: '#FF6B6B',
+      headerColor: '#DC4C4C',
+      gridBgColor: '#FF9999',
+      wordsBgColor: '#DC3545',
+      bank: WORDS_EXPERTO 
+    },
+    { 
+      name: 'EXTRA', 
+      words: 15, 
+      time: 15, 
+      color: '#9B59B6',
+      headerColor: '#9B59B6',
+      gridBgColor: '#C19CD9',
+      wordsBgColor: '#8B4AAD',
+      bank: WORDS_EXTRA 
+    }
   ];
 
   if (selectedDifficulty) {
@@ -303,6 +376,9 @@ export default function App() {
         wordsCount={selectedDifficulty.words}
         timeLimit={selectedDifficulty.time}
         wordsBank={selectedDifficulty.bank}
+        headerColor={selectedDifficulty.headerColor}
+        gridBgColor={selectedDifficulty.gridBgColor}
+        wordsBgColor={selectedDifficulty.wordsBgColor}
         onBack={() => setSelectedDifficulty(null)}
       />
     );
@@ -310,143 +386,221 @@ export default function App() {
 
   return (
     <View style={styles.menuContainer}>
-      <Text style={styles.menuTitle}>SOPITA</Text>
-      <Text style={styles.menuSubtitle}>Selecciona la dificultad:</Text>
-      
-      {difficulties.map((diff, idx) => (
-        <TouchableOpacity
-          key={idx}
-          style={[styles.menuButton, { backgroundColor: diff.color }]}
-          onPress={() => setSelectedDifficulty(diff)}
-        >
-          <Text style={styles.menuButtonText}>{diff.name}</Text>
-        </TouchableOpacity>
-      ))}
+      {/* Title Box */}
+      <View style={styles.menuTitleBox}>
+        <Text style={styles.menuTitle}>SOPITA</Text>
+      </View>
+
+      {/* Subtitle Box */}
+      <View style={styles.menuSubtitleBox}>
+        <Text style={styles.menuSubtitle}>SELECCIONA LA{'\n'}DIFICULTAD DE SOPITA</Text>
+      </View>
+
+      {/* Difficulty Buttons */}
+      <View style={styles.menuButtonsContainer}>
+        {difficulties.map((diff, idx) => (
+          <TouchableOpacity
+            key={idx}
+            style={[styles.menuButton, { backgroundColor: diff.color }]}
+            onPress={() => setSelectedDifficulty(diff)}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.menuButtonText}>{diff.name}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#1a1a1a',
-    padding: 10,
-  },
-  header: {
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#fff',
-    marginBottom: 10,
-  },
-  timer: {
-    fontSize: 20,
-    color: '#FFD700',
-    fontWeight: 'bold',
-  },
-  rounds: {
-    fontSize: 18,
-    color: '#9B59B6',
-    fontWeight: 'bold',
-    marginTop: 5,
-  },
-  wordsContainer: {
-    backgroundColor: '#2a2a2a',
-    padding: 15,
-    borderRadius: 10,
-    marginBottom: 20,
-  },
-  wordsTitle: {
-    fontSize: 16,
-    color: '#fff',
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  wordsList: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 10,
-  },
-  word: {
-    color: '#fff',
-    fontSize: 14,
-    padding: 5,
-    backgroundColor: '#444',
-    borderRadius: 5,
-  },
-  wordFound: {
-    backgroundColor: '#28a745',
-    textDecorationLine: 'line-through',
-  },
-  gridContainer: {
-    alignSelf: 'center',
-    backgroundColor: '#2a2a2a',
-    padding: 5,
-    borderRadius: 10,
-  },
-  row: {
-    flexDirection: 'row',
-  },
-  cell: {
-    width: 30,
-    height: 30,
-    backgroundColor: '#444',
-    margin: 2,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 5,
-  },
-  cellSelected: {
-    backgroundColor: '#FFD700',
-  },
-  cellText: {
-    color: '#fff',
-    fontSize: 12,
-    fontWeight: 'bold',
-  },
-  backButton: {
-    backgroundColor: '#dc3545',
-    padding: 15,
-    borderRadius: 10,
-    alignItems: 'center',
-    marginTop: 20,
-    marginBottom: 30,
-  },
-  backButtonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
+  // Menu Styles
   menuContainer: {
     flex: 1,
-    backgroundColor: '#1a1a1a',
+    backgroundColor: '#64B5F6',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
   },
+  menuTitleBox: {
+    backgroundColor: '#1565C0',
+    paddingVertical: 25,
+    paddingHorizontal: 50,
+    borderRadius: 15,
+    marginBottom: 15,
+    elevation: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+  },
   menuTitle: {
-    fontSize: 48,
+    fontSize: 56,
     fontWeight: 'bold',
     color: '#fff',
-    marginBottom: 20,
+    letterSpacing: 4,
+    textAlign: 'center',
+  },
+  menuSubtitleBox: {
+    backgroundColor: '#1976D2',
+    paddingVertical: 12,
+    paddingHorizontal: 35,
+    borderRadius: 10,
+    marginBottom: 35,
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
   },
   menuSubtitle: {
-    fontSize: 18,
+    fontSize: 16,
+    fontWeight: 'bold',
     color: '#fff',
-    marginBottom: 30,
+    textAlign: 'center',
+    textTransform: 'uppercase',
+  },
+  menuButtonsContainer: {
+    width: '100%',
+    maxWidth: 350,
+    gap: 18,
   },
   menuButton: {
-    width: '80%',
-    padding: 20,
+    paddingVertical: 18,
+    paddingHorizontal: 20,
     borderRadius: 10,
-    alignItems: 'center',
-    marginBottom: 15,
+    elevation: 6,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
   },
   menuButtonText: {
-    fontSize: 24,
+    fontSize: 26,
+    fontWeight: 'bold',
+    color: '#000',
+    textAlign: 'center',
+    letterSpacing: 2,
+  },
+
+  // Game Styles
+  gameContainer: {
+    flex: 1,
+    backgroundColor: '#1a1a1a',
+  },
+  gameHeader: {
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+  },
+  gameTitle: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: '#000',
+    letterSpacing: 2,
+  },
+  timerBar: {
+    backgroundColor: '#000000ff',
+    paddingVertical: 10,
+    alignItems: 'center',
+  },
+  timerText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+  gameContent: {
+    flex: 1,
+    padding: 20,
+    alignItems: 'center',
+  },
+  gridWrapper: {
+    marginBottom: 25,
+  },
+  gridContainer: {
+    backgroundColor: '#000',
+    padding: 8,
+    borderRadius: 8,
+    gap: 3,
+  },
+  gridRow: {
+    flexDirection: 'row',
+    gap: 3,
+  },
+  gridCell: {
+    width: 38,
+    height: 38,
+    backgroundColor: '#fff',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: '#333',
+  },
+  gridCellSelected: {
+    backgroundColor: '#FFD700',
+  },
+  gridCellText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#000',
+  },
+  wordsSection: {
+    width: '100%',
+    maxWidth: 380,
+    marginBottom: 25,
+  },
+  wordsSectionHeader: {
+    paddingVertical: 12,
+    paddingHorizontal: 15,
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+  },
+  wordsSectionTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#000',
+    textAlign: 'center',
+  },
+  wordsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    padding: 12,
+    gap: 10,
+  },
+  wordsGridExperto: {
+    justifyContent: 'space-between',
+  },
+  wordBox: {
+    width: '47%',
+    paddingVertical: 12,
+    paddingHorizontal: 8,
+    borderRadius: 6,
+    borderWidth: 2,
+    borderColor: '#000',
+    alignItems: 'center',
+  },
+  wordBoxText: {
+    fontSize: 13,
+    fontWeight: 'bold',
+    color: '#000',
+    textAlign: 'center',
+  },
+  wordBoxTextFound: {
+    textDecorationLine: 'line-through',
+  },
+  backButton: {
+    paddingVertical: 15,
+    paddingHorizontal: 40,
+    borderRadius: 8,
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+  },
+  backButtonText: {
+    fontSize: 18,
     fontWeight: 'bold',
     color: '#000',
   },
