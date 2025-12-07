@@ -69,16 +69,14 @@ interface Difficulty {
 
 const generateWordSearch = (words: string[]): string[][] => {
   const grid: string[][] = Array(GRID_SIZE).fill(null).map(() => 
-    Array(GRID_SIZE).fill(null).map(() => 
-      String.fromCharCode(65 + Math.floor(Math.random() * 26))
-    )
+    Array(GRID_SIZE).fill(null).map(() => '')
   );
   
   words.forEach(word => {
     let placed = false;
     let attempts = 0;
     
-    while (!placed && attempts < 100) {
+    while (!placed && attempts < 200) {
       const direction = Math.floor(Math.random() * 3);
       const row = Math.floor(Math.random() * GRID_SIZE);
       const col = Math.floor(Math.random() * GRID_SIZE);
@@ -91,23 +89,68 @@ const generateWordSearch = (words: string[]): string[][] => {
     }
   });
   
+  // Rellenar espacios vacíos con letras aleatorias
+  for (let i = 0; i < GRID_SIZE; i++) {
+    for (let j = 0; j < GRID_SIZE; j++) {
+      if (grid[i][j] === '') {
+        grid[i][j] = String.fromCharCode(65 + Math.floor(Math.random() * 26));
+      }
+    }
+  }
+  
   return grid;
 };
 
 const canPlaceWord = (grid: string[][], word: string, row: number, col: number, direction: number): boolean => {
-  if (direction === 0 && col + word.length > GRID_SIZE) return false;
-  if (direction === 1 && row + word.length > GRID_SIZE) return false;
-  if (direction === 2 && (row + word.length > GRID_SIZE || col + word.length > GRID_SIZE)) return false;
+  // Dirección 0: Horizontal (derecha)
+  if (direction === 0) {
+    if (col + word.length > GRID_SIZE) return false;
+    // Verificar que no haya letras ya colocadas en esas posiciones
+    for (let i = 0; i < word.length; i++) {
+      if (grid[row][col + i] !== '') {
+        return false; // Ya hay una letra colocada
+      }
+    }
+  }
+  // Dirección 1: Vertical (abajo)
+  else if (direction === 1) {
+    if (row + word.length > GRID_SIZE) return false;
+    for (let i = 0; i < word.length; i++) {
+      if (grid[row + i][col] !== '') {
+        return false;
+      }
+    }
+  }
+  // Dirección 2: Diagonal (abajo-derecha)
+  else if (direction === 2) {
+    if (row + word.length > GRID_SIZE || col + word.length > GRID_SIZE) return false;
+    for (let i = 0; i < word.length; i++) {
+      if (grid[row + i][col + i] !== '') {
+        return false;
+      }
+    }
+  }
   return true;
 };
 
 const placeWord = (grid: string[][], word: string, row: number, col: number, direction: number): void => {
+  // Dirección 0: Horizontal - toda la palabra en línea recta horizontal
   if (direction === 0) {
-    for (let i = 0; i < word.length; i++) grid[row][col + i] = word[i];
-  } else if (direction === 1) {
-    for (let i = 0; i < word.length; i++) grid[row + i][col] = word[i];
-  } else {
-    for (let i = 0; i < word.length; i++) grid[row + i][col + i] = word[i];
+    for (let i = 0; i < word.length; i++) {
+      grid[row][col + i] = word[i];
+    }
+  } 
+  // Dirección 1: Vertical - toda la palabra en línea recta vertical
+  else if (direction === 1) {
+    for (let i = 0; i < word.length; i++) {
+      grid[row + i][col] = word[i];
+    }
+  } 
+  // Dirección 2: Diagonal - toda la palabra en línea recta diagonal
+  else if (direction === 2) {
+    for (let i = 0; i < word.length; i++) {
+      grid[row + i][col + i] = word[i];
+    }
   }
 };
 
@@ -144,7 +187,10 @@ const WordSearchGame: React.FC<WordSearchGameProps> = ({
   const [timeLeft, setTimeLeft] = useState(timeLimit);
   const [isPlaying, setIsPlaying] = useState(true);
   const [roundsCompleted, setRoundsCompleted] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const gridRef = useRef<View>(null);
 
   useEffect(() => {
     initGame();
@@ -207,22 +253,123 @@ const WordSearchGame: React.FC<WordSearchGameProps> = ({
     setIsPlaying(true);
   };
 
-  const handleCellPress = (row: number, col: number) => {
-    if (!isPlaying) return;
+  const handleTouchStart = (event: any) => {
+    if (!isPlaying || !gridRef.current) return;
     
-    const cellKey = `${row}-${col}`;
-    const newSelected = [...selectedCells];
+    gridRef.current.measure((fx, fy, width, height, px, py) => {
+      const touch = event.nativeEvent;
+      const relativeX = touch.pageX - px;
+      const relativeY = touch.pageY - py;
+      
+      const adjustedX = relativeX - 8;
+      const adjustedY = relativeY - 8;
+      
+      const cellWithGap = 41;
+      const col = Math.floor(adjustedX / cellWithGap);
+      const row = Math.floor(adjustedY / cellWithGap);
+      
+      if (row >= 0 && row < GRID_SIZE && col >= 0 && col < GRID_SIZE) {
+        setIsDragging(true);
+        const cellKey = `${row}-${col}`;
+        setSelectedCells([cellKey]);
+      }
+    });
+  };
+
+  const handleTouchMove = (event: any) => {
+    if (!isPlaying || !isDragging || !gridRef.current) return;
     
-    if (newSelected.includes(cellKey)) {
-      setSelectedCells(newSelected.filter(c => c !== cellKey));
-    } else {
-      newSelected.push(cellKey);
-      setSelectedCells(newSelected);
-      checkWord(newSelected);
+    gridRef.current.measure((fx, fy, width, height, px, py) => {
+      const touch = event.nativeEvent;
+      const relativeX = touch.pageX - px;
+      const relativeY = touch.pageY - py;
+      
+      const adjustedX = relativeX - 8;
+      const adjustedY = relativeY - 8;
+      
+      const cellWithGap = 41;
+      const col = Math.floor(adjustedX / cellWithGap);
+      const row = Math.floor(adjustedY / cellWithGap);
+      
+      if (row >= 0 && row < GRID_SIZE && col >= 0 && col < GRID_SIZE) {
+        const cellKey = `${row}-${col}`;
+        
+        setSelectedCells(prev => {
+          // Si ya está seleccionada, no hacer nada
+          if (prev.includes(cellKey)) {
+            return prev;
+          }
+          
+          // Si es la primera celda o la segunda, agregar directamente
+          if (prev.length === 0 || prev.length === 1) {
+            return [...prev, cellKey];
+          }
+          
+          // Para la tercera celda en adelante, validar que siga la misma dirección
+          const isValidDirection = validateDirection([...prev, cellKey]);
+          
+          if (isValidDirection) {
+            return [...prev, cellKey];
+          }
+          
+          return prev;
+        });
+      }
+    });
+  };
+
+  const validateDirection = (cells: string[]): boolean => {
+    if (cells.length < 2) return true;
+    
+    // Obtener coordenadas de las celdas
+    const coords = cells.map(cell => {
+      const parts = cell.split('-');
+      return { row: Number(parts[0]), col: Number(parts[1]) };
+    });
+    
+    // Calcular la dirección entre las dos primeras celdas
+    const deltaRow = coords[1].row - coords[0].row;
+    const deltaCol = coords[1].col - coords[0].col;
+    
+    // Normalizar la dirección (-1, 0, 1)
+    const dirRow = deltaRow === 0 ? 0 : deltaRow / Math.abs(deltaRow);
+    const dirCol = deltaCol === 0 ? 0 : deltaCol / Math.abs(deltaCol);
+    
+    // Validar que todas las celdas siguientes mantengan la misma dirección
+    for (let i = 1; i < coords.length - 1; i++) {
+      const currentDeltaRow = coords[i + 1].row - coords[i].row;
+      const currentDeltaCol = coords[i + 1].col - coords[i].col;
+      
+      const currentDirRow = currentDeltaRow === 0 ? 0 : currentDeltaRow / Math.abs(currentDeltaRow);
+      const currentDirCol = currentDeltaCol === 0 ? 0 : currentDeltaCol / Math.abs(currentDeltaCol);
+      
+      // Si la dirección cambia, no es válido
+      if (currentDirRow !== dirRow || currentDirCol !== dirCol) {
+        return false;
+      }
+      
+      // Validar que sea adyacente (distancia de 1 en la dirección)
+      if (Math.abs(currentDeltaRow) > 1 || Math.abs(currentDeltaCol) > 1) {
+        return false;
+      }
     }
+    
+    return true;
+  };
+
+  const handleTouchEnd = () => {
+    if (!isPlaying || !isDragging) return;
+    
+    setIsDragging(false);
+    checkWord(selectedCells);
   };
 
   const checkWord = (cells: string[]) => {
+    if (cells.length === 0) {
+      setSelectedCells([]);
+      return;
+    }
+
     const word = cells.map(cell => {
       const parts = cell.split('-');
       const row = Number(parts[0]);
@@ -230,24 +377,26 @@ const WordSearchGame: React.FC<WordSearchGameProps> = ({
       return grid[row][col];
     }).join('');
     
+    let wordFound = false;
+    
     words.forEach(w => {
       if ((word === w || word.split('').reverse().join('') === w) && !foundWords.includes(w)) {
         setFoundWords([...foundWords, w]);
-        setSelectedCells([]);
+        wordFound = true;
       }
     });
+    
+    setSelectedCells([]);
   };
 
   const isExperto = difficulty === 'experto';
 
   return (
     <ScrollView style={styles.gameContainer}>
-      {/* Header */}
       <View style={[styles.gameHeader, { backgroundColor: headerColor }]}>
         <Text style={styles.gameTitle}>{difficulty.toUpperCase()}</Text>
       </View>
 
-      {/* Timer Bar - Mostrar para todos los niveles excepto en extra que tiene su propio formato */}
       {difficulty !== 'extra' ? (
         <View style={styles.timerBar}>
           <Text style={styles.timerText}>TIEMPO: {timeLeft} SEG</Text>
@@ -258,31 +407,35 @@ const WordSearchGame: React.FC<WordSearchGameProps> = ({
         </View>
       )}
 
-      {/* Main Content */}
       <View style={[styles.gameContent, { backgroundColor: gridBgColor }]}>
-        {/* Grid */}
         <View style={styles.gridWrapper}>
-          <View style={styles.gridContainer}>
+          <View 
+            ref={gridRef}
+            style={styles.gridContainer}
+            onStartShouldSetResponder={() => true}
+            onMoveShouldSetResponder={() => true}
+            onResponderGrant={handleTouchStart}
+            onResponderMove={handleTouchMove}
+            onResponderRelease={handleTouchEnd}
+          >
             {grid.map((row, rowIdx) => (
               <View key={rowIdx} style={styles.gridRow}>
                 {row.map((cell, colIdx) => (
-                  <TouchableOpacity
+                  <View
                     key={`${rowIdx}-${colIdx}`}
                     style={[
                       styles.gridCell,
                       selectedCells.includes(`${rowIdx}-${colIdx}`) && styles.gridCellSelected
                     ]}
-                    onPress={() => handleCellPress(rowIdx, colIdx)}
                   >
                     <Text style={styles.gridCellText}>{cell}</Text>
-                  </TouchableOpacity>
+                  </View>
                 ))}
               </View>
             ))}
           </View>
         </View>
 
-        {/* Words Section */}
         <View style={styles.wordsSection}>
           <View style={[styles.wordsSectionHeader, { backgroundColor: wordsBgColor }]}>
             <Text style={styles.wordsSectionTitle}>PALABRAS A ENCONTRAR:</Text>
@@ -311,7 +464,6 @@ const WordSearchGame: React.FC<WordSearchGameProps> = ({
           </View>
         </View>
 
-        {/* Back Button */}
         <TouchableOpacity 
           style={[styles.backButton, { backgroundColor: headerColor }]}
           onPress={onBack}
@@ -386,17 +538,14 @@ export default function App() {
 
   return (
     <View style={styles.menuContainer}>
-      {/* Title Box */}
       <View style={styles.menuTitleBox}>
         <Text style={styles.menuTitle}>SOPITA</Text>
       </View>
 
-      {/* Subtitle Box */}
       <View style={styles.menuSubtitleBox}>
         <Text style={styles.menuSubtitle}>SELECCIONA LA{'\n'}DIFICULTAD DE SOPITA</Text>
       </View>
 
-      {/* Difficulty Buttons */}
       <View style={styles.menuButtonsContainer}>
         {difficulties.map((diff, idx) => (
           <TouchableOpacity
@@ -413,6 +562,7 @@ export default function App() {
   );
 }
 
+//---------------ESTILO DE SOPITA-----------------------------------------
 const styles = StyleSheet.create({
   // Menu Styles
   menuContainer: {
