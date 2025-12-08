@@ -183,6 +183,7 @@ const WordSearchGame: React.FC<WordSearchGameProps> = ({
   const [words, setWords] = useState<string[]>([]);
   const [grid, setGrid] = useState<string[][]>([]);
   const [foundWords, setFoundWords] = useState<string[]>([]);
+  const [foundCells, setFoundCells] = useState<string[]>([]); // Nuevas celdas encontradas
   const [selectedCells, setSelectedCells] = useState<string[]>([]);
   const [timeLeft, setTimeLeft] = useState(timeLimit);
   const [isPlaying, setIsPlaying] = useState(true);
@@ -249,6 +250,7 @@ const WordSearchGame: React.FC<WordSearchGameProps> = ({
     setWords(selectedWords);
     setGrid(generateWordSearch(selectedWords));
     setFoundWords([]);
+    setFoundCells([]);
     setSelectedCells([]);
     setIsPlaying(true);
   };
@@ -381,7 +383,8 @@ const WordSearchGame: React.FC<WordSearchGameProps> = ({
     
     words.forEach(w => {
       if ((word === w || word.split('').reverse().join('') === w) && !foundWords.includes(w)) {
-        setFoundWords([...foundWords, w]);
+        setFoundWords(prev => [...prev, w]);
+        setFoundCells(prev => [...prev, ...cells]); // Agregar celdas de la palabra encontrada
         wordFound = true;
       }
     });
@@ -420,17 +423,24 @@ const WordSearchGame: React.FC<WordSearchGameProps> = ({
           >
             {grid.map((row, rowIdx) => (
               <View key={rowIdx} style={styles.gridRow}>
-                {row.map((cell, colIdx) => (
-                  <View
-                    key={`${rowIdx}-${colIdx}`}
-                    style={[
-                      styles.gridCell,
-                      selectedCells.includes(`${rowIdx}-${colIdx}`) && styles.gridCellSelected
-                    ]}
-                  >
-                    <Text style={styles.gridCellText}>{cell}</Text>
-                  </View>
-                ))}
+                {row.map((cell, colIdx) => {
+                  const cellKey = `${rowIdx}-${colIdx}`;
+                  const isSelected = selectedCells.includes(cellKey);
+                  const isFound = foundCells.includes(cellKey);
+                  
+                  return (
+                    <View
+                      key={cellKey}
+                      style={[
+                        styles.gridCell,
+                        isSelected && styles.gridCellSelected,
+                        isFound && styles.gridCellFound
+                      ]}
+                    >
+                      <Text style={styles.gridCellText}>{cell}</Text>
+                    </View>
+                  );
+                })}
               </View>
             ))}
           </View>
@@ -689,6 +699,9 @@ const styles = StyleSheet.create({
   },
   gridCellSelected: {
     backgroundColor: '#FFD700',
+  },
+  gridCellFound: {
+    backgroundColor: '#4CAF50',
   },
   gridCellText: {
     fontSize: 16,
