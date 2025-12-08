@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, Alert, ScrollView, StyleSheet } from 'react-native';
 
-// Banco de 100 palabras para NOVATO
-const WORDS_NOVATO = [
+const WORDS_NOVATO: string[] = [
   'CASA', 'PERRO', 'GATO', 'LIBRO', 'MESA', 'SILLA', 'ARBOL', 'FLOR', 'AGUA', 'FUEGO',
   'TIERRA', 'AIRE', 'SOL', 'LUNA', 'ESTRELLA', 'NUBE', 'LLUVIA', 'VIENTO', 'MAR', 'RIO',
   'MONTANA', 'VALLE', 'CAMPO', 'CIUDAD', 'PUEBLO', 'CALLE', 'PUENTE', 'TORRE', 'IGLESIA', 'ESCUELA',
@@ -14,7 +13,8 @@ const WORDS_NOVATO = [
   'COCHE', 'AVION', 'BARCO', 'TREN', 'BICI', 'MOTO', 'CAMION', 'AUTOBUS', 'TAXI', 'COHETE',
   'LAPIZ', 'PAPEL', 'CUADERNO', 'BOLSA', 'RELOJ', 'TELEFONO', 'COMPU', 'TECLADO', 'RATON', 'PANTALLA'
 ];
-const WORDS_AVANZADO = [
+
+const WORDS_AVANZADO: string[] = [
   'AVENTURA', 'BATALLA', 'CAMPEON', 'DESAFIO', 'ENERGIA', 'FUERZA', 'GUERRERO', 'HEROE', 'IMPERIO', 'JUSTICIA',
   'KINGDOM', 'LEYENDA', 'MAGIA', 'NACION', 'ORDEN', 'PODER', 'QUEST', 'REINO', 'SABIDURIA', 'TESORO',
   'UNIVERSO', 'VALENTIA', 'WIZARD', 'XILOFONO', 'YOGA', 'ZAFIRO', 'ACTIVO', 'BRAVO', 'CORAJE', 'DESTINO',
@@ -26,7 +26,8 @@ const WORDS_AVANZADO = [
   'DIEZ', 'EMBLEMA', 'FORTALEZA', 'GEMA', 'HONOR', 'JINETE', 'KHAN', 'LIDER', 'MAESTRO',
   'NINJA', 'OLIMPO', 'PRINCIPE', 'QUEEN', 'REY', 'SAMURAI', 'TRONO', 'UNION', 'VICTORIA', 'ZEUS'
 ];
-const WORDS_EXPERTO = [
+
+const WORDS_EXPERTO: string[] = [
   'ABISMO', 'BESTIA', 'CAOS', 'DEMONIO', 'ECLIPSE', 'FENIX', 'GENESIS', 'HECHIZO', 'INFERNO', 'JUICIO',
   'KARMA', 'LEGION', 'MITOLOGIA', 'PORTAL', 'OMEGA', 'PROFECIA', 'MISTERIO', 'RITUAL', 'SANGRE', 'TALISMAN',
   'SOMBRA', 'VAMPIRO', 'BRUJO', 'MONSTRUO', 'ARBOL', 'ZODIACO', 'ABISMO', 'ESPECTRO', 'QUIMERA', 'DEMON',
@@ -38,7 +39,8 @@ const WORDS_EXPERTO = [
   'CRUDO', 'DESTINO', 'ENIGMA', 'FURIA', 'ENERGIA', 'BUFON', 'CUSTODIO', 'CRUDO',
   'MISTICO', 'PESADILLA', 'ATAQUE', 'PAZ', 'BUSQUEDA', 'REQUIEM', 'SANTO', 'TITAN', 'ULTIMA', 'VALOR'
 ];
-const WORDS_EXTRA = [
+
+const WORDS_EXTRA: string[] = [
   'ACERO', 'BRISA', 'CIELO', 'DANZA', 'ESPEJO', 'FARO', 'GRITO', 'HIELO', 'ISLA', 'JADE',
   'KILO', 'LAGO', 'MURO', 'NIDO', 'ORO', 'PAZ', 'QUESO', 'ROCA', 'SEDA', 'TINTA',
   'UNO', 'VELA', 'WEB', 'RAYO', 'YOGA', 'ZENIT', 'ALMA', 'BESO', 'CIMA', 'DUNA',
@@ -187,9 +189,15 @@ const WordSearchGame: React.FC<WordSearchGameProps> = ({
       }, 1000);
     } else if (timeLeft === 0 && isPlaying) {
       setIsPlaying(false);
-      Alert.alert('¡Perdiste!', 'Se acabó el tiempo', [
-        { text: 'OK', onPress: onBack }
-      ]);
+      if (difficulty === 'extra') {
+        Alert.alert('¡Perdiste!', 'Se acabó el tiempo. No completaste las 5 rondas.', [
+          { text: 'OK', onPress: onBack }
+        ]);
+      } else {
+        Alert.alert('¡Perdiste!', 'Se acabó el tiempo', [
+          { text: 'OK', onPress: onBack }
+        ]);
+      }
     }
     
     return () => {
@@ -205,11 +213,11 @@ const WordSearchGame: React.FC<WordSearchGameProps> = ({
         
         if (newRounds >= 5) {
           setIsPlaying(false);
-          Alert.alert('¡Felicidades!', '¡Completaste los 5 niveles!', [
+          Alert.alert('¡Felicidades!', '¡Completaste las 5 rondas!', [
             { text: 'OK', onPress: onBack }
           ]);
         } else {
-          Alert.alert('¡Nivel completado!', `Nivel ${newRounds} de 5 completado`, [
+          Alert.alert('¡Nivel completado!', `Ronda ${newRounds} de 5 completada`, [
             { text: 'Siguiente', onPress: () => {
               setTimeLeft(timeLimit);
               initGame();
@@ -242,7 +250,7 @@ const WordSearchGame: React.FC<WordSearchGameProps> = ({
       scrollViewRef.current.setNativeProps({ scrollEnabled: false });
     }
     
-    gridRef.current.measure((fx, fy, width, height, px, py) => {
+    gridRef.current.measure((fx: number, fy: number, width: number, height: number, px: number, py: number) => {
       const touch = event.nativeEvent;
       const relativeX = touch.pageX - px;
       const relativeY = touch.pageY - py;
@@ -259,11 +267,10 @@ const WordSearchGame: React.FC<WordSearchGameProps> = ({
       }
     });
   };
-
   const handleTouchMove = (event: any) => {
     if (!isPlaying || !isDragging || !gridRef.current) return;
     
-    gridRef.current.measure((fx, fy, width, height, px, py) => {
+    gridRef.current.measure((fx: number, fy: number, width: number, height: number, px: number, py: number) => {
       const touch = event.nativeEvent;
       const relativeX = touch.pageX - px;
       const relativeY = touch.pageY - py;
@@ -475,8 +482,8 @@ export default function App() {
     },
     { 
       name: 'EXTRA', 
-      words: 15, 
-      time: 30, 
+      words: 3, 
+      time: 10, 
       color: '#9B59B6',
       headerColor: '#9B59B6',
       gridBgColor: '#C19CD9',
