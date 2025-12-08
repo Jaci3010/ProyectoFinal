@@ -14,33 +14,30 @@ const WORDS_NOVATO = [
   'COCHE', 'AVION', 'BARCO', 'TREN', 'BICI', 'MOTO', 'CAMION', 'AUTOBUS', 'TAXI', 'COHETE',
   'LAPIZ', 'PAPEL', 'CUADERNO', 'BOLSA', 'RELOJ', 'TELEFONO', 'COMPU', 'TECLADO', 'RATON', 'PANTALLA'
 ];
-// Banco de 100 palabras para AVANZADO
 const WORDS_AVANZADO = [
   'AVENTURA', 'BATALLA', 'CAMPEON', 'DESAFIO', 'ENERGIA', 'FUERZA', 'GUERRERO', 'HEROE', 'IMPERIO', 'JUSTICIA',
   'KINGDOM', 'LEYENDA', 'MAGIA', 'NACION', 'ORDEN', 'PODER', 'QUEST', 'REINO', 'SABIDURIA', 'TESORO',
   'UNIVERSO', 'VALENTIA', 'WIZARD', 'XILOFONO', 'YOGA', 'ZAFIRO', 'ACTIVO', 'BRAVO', 'CORAJE', 'DESTINO',
   'ESPADA', 'FALCON', 'GUARDIAN', 'HAZANA', 'INGENIO', 'JIRAFA', 'KOALA', 'LEOPARDO', 'MANADA', 'NIEVE',
-  'OCEANO', 'PIRATA', 'QUETZAL', 'RAPIDO', 'SERPIENTE', 'TORNADO', 'UNICORNIO', 'VOLCAN', 'WARRIOR', 'XENON',
-  'YATE', 'ZORRO', 'ALIANZA', 'BRONCE', 'CRISTAL', 'DRAGON', 'ESCUDO', 'FLECHA', 'GLADIADOR', 'HACHA',
+  'OCEANO', 'PIRATA', 'QUETZAL', 'RAPIDO', 'SERPIENTE', 'TORNADO', 'UNICO', 'VOLCAN', 'WARRIOR', 'XENON',
+  'YATE', 'ZORRO', 'ALIANZA', 'BRONCE', 'CRISTAL', 'DRAGON', 'ESCUDO', 'FLECHA', 'GALAN', 'HACHA',
   'ICONO', 'JAGUAR', 'KRAKEN', 'LANZA', 'MISTICO', 'NOBLE', 'ORACULO', 'PALADIN', 'QUIMERA', 'RAYO',
   'TITAN', 'UMBRAL', 'VIKINGO', 'WYVERN', 'XERXES', 'YAKUZA', 'ZENITH', 'ARMADURA', 'BANDERA', 'CETRO',
-  'DIAMANTE', 'EMBLEMA', 'FORTALEZA', 'GEMA', 'HONOR', 'INSIGNIA', 'JINETE', 'KHAN', 'LIDER', 'MAESTRO',
+  'DIEZ', 'EMBLEMA', 'FORTALEZA', 'GEMA', 'HONOR', 'JINETE', 'KHAN', 'LIDER', 'MAESTRO',
   'NINJA', 'OLIMPO', 'PRINCIPE', 'QUEEN', 'REY', 'SAMURAI', 'TRONO', 'UNION', 'VICTORIA', 'ZEUS'
 ];
-// Banco de 100 palabras para EXPERTO
 const WORDS_EXPERTO = [
   'ABISMO', 'BESTIA', 'CAOS', 'DEMONIO', 'ECLIPSE', 'FENIX', 'GENESIS', 'HECHIZO', 'INFERNO', 'JUICIO',
   'KARMA', 'LEGION', 'MITOLOGIA', 'PORTAL', 'OMEGA', 'PROFECIA', 'MISTERIO', 'RITUAL', 'SANGRE', 'TALISMAN',
   'SOMBRA', 'VAMPIRO', 'BRUJO', 'MONSTRUO', 'ARBOL', 'ZODIACO', 'ABISMO', 'ESPECTRO', 'QUIMERA', 'DEMON',
   'ELIXIR', 'FURIA', 'GOLEM', 'HIDRA', 'ETERNAL', 'MALDICION', 'TITAN', 'LICH', 'MEDUSA', 'NECRO',
-  'OLVIDO', 'FENIX', 'GALAXIA', 'FIN_DEL_MUNDO', 'FANTASMA', 'MUERTE', 'URANO', 'VENENO', 'ALMA', 'PALACIO',
+  'OLVIDO', 'FENIX', 'GUAPO', 'FANTASMA', 'MUERTE', 'URANO', 'VENENO', 'ALMA', 'PALACIO',
   'GIGANTE', 'ZOMBIE', 'APEX', 'ESPADA', 'CIFRA', 'DESTINO', 'FORJA', 'GRIFO', 'CAOS', 'TORMENTA',
-  'INFERNAL', 'COLOSAL', 'ZORRO', 'LEVIA', 'MINOTAURO', 'NUBE', 'PIEDRA', 'ESPIRITUS', 'TEMBLOR', 'RELIQUIA',
-  'SOMBRA', 'TEMPESTAD', 'SUBMUNDO', 'REMOLINO', 'GUARDIAN', 'XENO', 'YOKAI', 'ZELO', 'ANTIGUO', 'FORTALEZA',
-  'CRUCIBLE', 'DESTINO', 'ENIGMA', 'FURIA', 'GOLIAT', 'MENSAJERO', 'ENERGIA', 'BUFON', 'CUSTODIO', 'LABERINTO',
-  'MISTICO', 'PESADILLA', 'ATAQUE', 'PARADOJA', 'BUSQUEDA', 'REQUIEM', 'SANTUARIO', 'TITAN', 'ULTIMA', 'VALOR'
+  'COLOSAL', 'ZORRO', 'LEVIA', 'MINA', 'NUBE', 'PIEDRA', 'ESPIRITUS', 'TEMBLOR', 'RELIQUIA',
+  'SOMBRA', 'TEMPLO', 'MUNDO', 'REMOLINO', 'XENO', 'YOKAI', 'ZELO', 'ANTIGUO', 'FORMA',
+  'CRUDO', 'DESTINO', 'ENIGMA', 'FURIA', 'ENERGIA', 'BUFON', 'CUSTODIO', 'CRUDO',
+  'MISTICO', 'PESADILLA', 'ATAQUE', 'PAZ', 'BUSQUEDA', 'REQUIEM', 'SANTO', 'TITAN', 'ULTIMA', 'VALOR'
 ];
-// Banco de 100 palabras para EXTRA
 const WORDS_EXTRA = [
   'ACERO', 'BRISA', 'CIELO', 'DANZA', 'ESPEJO', 'FARO', 'GRITO', 'HIELO', 'ISLA', 'JADE',
   'KILO', 'LAGO', 'MURO', 'NIDO', 'ORO', 'PAZ', 'QUESO', 'ROCA', 'SEDA', 'TINTA',
@@ -54,8 +51,7 @@ const WORDS_EXTRA = [
   'MAC', 'NFC', 'SON', 'PDF', 'CAL', 'ROM', 'SIM', 'TCP', 'URL', 'VGA'
 ];
 
-//tamaño de la sopita
-const GRID_SIZE = 8;
+const GRID_SIZE = 10;
 
 interface Difficulty {
   name: string;
@@ -90,7 +86,6 @@ const generateWordSearch = (words: string[]): string[][] => {
     }
   });
   
-  // Rellenar espacios vacíos con letras aleatorias
   for (let i = 0; i < GRID_SIZE; i++) {
     for (let j = 0; j < GRID_SIZE; j++) {
       if (grid[i][j] === '') {
@@ -103,52 +98,35 @@ const generateWordSearch = (words: string[]): string[][] => {
 };
 
 const canPlaceWord = (grid: string[][], word: string, row: number, col: number, direction: number): boolean => {
-  // Dirección 0: Horizontal (derecha)
   if (direction === 0) {
     if (col + word.length > GRID_SIZE) return false;
-    // Verificar que no haya letras ya colocadas en esas posiciones
     for (let i = 0; i < word.length; i++) {
-      if (grid[row][col + i] !== '') {
-        return false; // Ya hay una letra colocada
-      }
+      if (grid[row][col + i] !== '') return false;
     }
-  }
-  // Dirección 1: Vertical (abajo)
-  else if (direction === 1) {
+  } else if (direction === 1) {
     if (row + word.length > GRID_SIZE) return false;
     for (let i = 0; i < word.length; i++) {
-      if (grid[row + i][col] !== '') {
-        return false;
-      }
+      if (grid[row + i][col] !== '') return false;
     }
-  }
-  // Dirección 2: Diagonal (abajo-derecha)
-  else if (direction === 2) {
+  } else if (direction === 2) {
     if (row + word.length > GRID_SIZE || col + word.length > GRID_SIZE) return false;
     for (let i = 0; i < word.length; i++) {
-      if (grid[row + i][col + i] !== '') {
-        return false;
-      }
+      if (grid[row + i][col + i] !== '') return false;
     }
   }
   return true;
 };
 
 const placeWord = (grid: string[][], word: string, row: number, col: number, direction: number): void => {
-  // Dirección 0: Horizontal - toda la palabra en línea recta horizontal
   if (direction === 0) {
     for (let i = 0; i < word.length; i++) {
       grid[row][col + i] = word[i];
     }
-  } 
-  // Dirección 1: Vertical - toda la palabra en línea recta vertical
-  else if (direction === 1) {
+  } else if (direction === 1) {
     for (let i = 0; i < word.length; i++) {
       grid[row + i][col] = word[i];
     }
-  } 
-  // Dirección 2: Diagonal - toda la palabra en línea recta diagonal
-  else if (direction === 2) {
+  } else if (direction === 2) {
     for (let i = 0; i < word.length; i++) {
       grid[row + i][col + i] = word[i];
     }
@@ -184,7 +162,7 @@ const WordSearchGame: React.FC<WordSearchGameProps> = ({
   const [words, setWords] = useState<string[]>([]);
   const [grid, setGrid] = useState<string[][]>([]);
   const [foundWords, setFoundWords] = useState<string[]>([]);
-  const [foundCells, setFoundCells] = useState<string[]>([]); // Nuevas celdas encontradas
+  const [foundCells, setFoundCells] = useState<string[]>([]);
   const [selectedCells, setSelectedCells] = useState<string[]>([]);
   const [timeLeft, setTimeLeft] = useState(timeLimit);
   const [isPlaying, setIsPlaying] = useState(true);
@@ -260,7 +238,6 @@ const WordSearchGame: React.FC<WordSearchGameProps> = ({
   const handleTouchStart = (event: any) => {
     if (!isPlaying || !gridRef.current) return;
     
-    // Deshabilitar scroll del ScrollView
     if (scrollViewRef.current) {
       scrollViewRef.current.setNativeProps({ scrollEnabled: false });
     }
@@ -269,10 +246,8 @@ const WordSearchGame: React.FC<WordSearchGameProps> = ({
       const touch = event.nativeEvent;
       const relativeX = touch.pageX - px;
       const relativeY = touch.pageY - py;
-      
       const adjustedX = relativeX - 8;
       const adjustedY = relativeY - 8;
-      
       const cellWithGap = 41;
       const col = Math.floor(adjustedX / cellWithGap);
       const row = Math.floor(adjustedY / cellWithGap);
@@ -292,10 +267,8 @@ const WordSearchGame: React.FC<WordSearchGameProps> = ({
       const touch = event.nativeEvent;
       const relativeX = touch.pageX - px;
       const relativeY = touch.pageY - py;
-      
       const adjustedX = relativeX - 8;
       const adjustedY = relativeY - 8;
-      
       const cellWithGap = 41;
       const col = Math.floor(adjustedX / cellWithGap);
       const row = Math.floor(adjustedY / cellWithGap);
@@ -304,23 +277,10 @@ const WordSearchGame: React.FC<WordSearchGameProps> = ({
         const cellKey = `${row}-${col}`;
         
         setSelectedCells(prev => {
-          // Si ya está seleccionada, no hacer nada
-          if (prev.includes(cellKey)) {
-            return prev;
-          }
-          
-          // Si es la primera celda o la segunda, agregar directamente
-          if (prev.length === 0 || prev.length === 1) {
-            return [...prev, cellKey];
-          }
-          
-          // Para la tercera celda en adelante, validar que siga la misma dirección
+          if (prev.includes(cellKey)) return prev;
+          if (prev.length === 0 || prev.length === 1) return [...prev, cellKey];
           const isValidDirection = validateDirection([...prev, cellKey]);
-          
-          if (isValidDirection) {
-            return [...prev, cellKey];
-          }
-          
+          if (isValidDirection) return [...prev, cellKey];
           return prev;
         });
       }
@@ -330,37 +290,24 @@ const WordSearchGame: React.FC<WordSearchGameProps> = ({
   const validateDirection = (cells: string[]): boolean => {
     if (cells.length < 2) return true;
     
-    // Obtener coordenadas de las celdas
     const coords = cells.map(cell => {
       const parts = cell.split('-');
       return { row: Number(parts[0]), col: Number(parts[1]) };
     });
     
-    // Calcular la dirección entre las dos primeras celdas
     const deltaRow = coords[1].row - coords[0].row;
     const deltaCol = coords[1].col - coords[0].col;
-    
-    // Normalizar la dirección (-1, 0, 1)
     const dirRow = deltaRow === 0 ? 0 : deltaRow / Math.abs(deltaRow);
     const dirCol = deltaCol === 0 ? 0 : deltaCol / Math.abs(deltaCol);
     
-    // Validar que todas las celdas siguientes mantengan la misma dirección
     for (let i = 1; i < coords.length - 1; i++) {
       const currentDeltaRow = coords[i + 1].row - coords[i].row;
       const currentDeltaCol = coords[i + 1].col - coords[i].col;
-      
       const currentDirRow = currentDeltaRow === 0 ? 0 : currentDeltaRow / Math.abs(currentDeltaRow);
       const currentDirCol = currentDeltaCol === 0 ? 0 : currentDeltaCol / Math.abs(currentDeltaCol);
       
-      // Si la dirección cambia, no es válido
-      if (currentDirRow !== dirRow || currentDirCol !== dirCol) {
-        return false;
-      }
-      
-      // Validar que sea adyacente (distancia de 1 en la dirección)
-      if (Math.abs(currentDeltaRow) > 1 || Math.abs(currentDeltaCol) > 1) {
-        return false;
-      }
+      if (currentDirRow !== dirRow || currentDirCol !== dirCol) return false;
+      if (Math.abs(currentDeltaRow) > 1 || Math.abs(currentDeltaCol) > 1) return false;
     }
     
     return true;
@@ -369,7 +316,6 @@ const WordSearchGame: React.FC<WordSearchGameProps> = ({
   const handleTouchEnd = () => {
     if (!isPlaying || !isDragging) return;
     
-    // Rehabilitar scroll del ScrollView
     if (scrollViewRef.current) {
       scrollViewRef.current.setNativeProps({ scrollEnabled: true });
     }
@@ -391,13 +337,10 @@ const WordSearchGame: React.FC<WordSearchGameProps> = ({
       return grid[row][col];
     }).join('');
     
-    let wordFound = false;
-    
     words.forEach(w => {
       if ((word === w || word.split('').reverse().join('') === w) && !foundWords.includes(w)) {
         setFoundWords(prev => [...prev, w]);
-        setFoundCells(prev => [...prev, ...cells]); // Agregar celdas de la palabra encontrada
-        wordFound = true;
+        setFoundCells(prev => [...prev, ...cells]);
       }
     });
     
@@ -407,93 +350,92 @@ const WordSearchGame: React.FC<WordSearchGameProps> = ({
   const isExperto = difficulty === 'experto';
 
   return (
-    <ScrollView ref={scrollViewRef} style={styles.gameContainer}>
+    <View style={styles.gameContainer}>
       <View style={[styles.gameHeader, { backgroundColor: headerColor }]}>
         <Text style={styles.gameTitle}>{difficulty.toUpperCase()}</Text>
       </View>
 
-      {difficulty !== 'extra' ? (
-        <View style={styles.timerBar}>
-          <Text style={styles.timerText}>TIEMPO: {timeLeft} SEG</Text>
-        </View>
-      ) : (
-        <View style={styles.timerBar}>
-          <Text style={styles.timerText}>TIEMPO RESTANTE: {timeLeft} SEG</Text>
-        </View>
-      )}
-
-      <View style={[styles.gameContent, { backgroundColor: gridBgColor }]}>
-        <View style={styles.gridWrapper}>
-          <View 
-            ref={gridRef}
-            style={styles.gridContainer}
-            onStartShouldSetResponder={() => true}
-            onMoveShouldSetResponder={() => true}
-            onResponderGrant={handleTouchStart}
-            onResponderMove={handleTouchMove}
-            onResponderRelease={handleTouchEnd}
-          >
-            {grid.map((row, rowIdx) => (
-              <View key={rowIdx} style={styles.gridRow}>
-                {row.map((cell, colIdx) => {
-                  const cellKey = `${rowIdx}-${colIdx}`;
-                  const isSelected = selectedCells.includes(cellKey);
-                  const isFound = foundCells.includes(cellKey);
-                  
-                  return (
-                    <View
-                      key={cellKey}
-                      style={[
-                        styles.gridCell,
-                        isSelected && { backgroundColor: headerColor },
-                        isFound && { backgroundColor: headerColor }
-                      ]}
-                    >
-                      <Text style={styles.gridCellText}>{cell}</Text>
-                    </View>
-                  );
-                })}
-              </View>
-            ))}
-          </View>
-        </View>
-
-        <View style={styles.wordsSection}>
-          <View style={[styles.wordsSectionHeader, { backgroundColor: wordsBgColor }]}>
-            <Text style={styles.wordsSectionTitle}>PALABRAS A ENCONTRAR:</Text>
-          </View>
-          
-          <View style={[
-            styles.wordsGrid,
-            isExperto && styles.wordsGridExperto
-          ]}>
-            {words.map((word, idx) => (
-              <View
-                key={idx}
-                style={[
-                  styles.wordBox,
-                  { backgroundColor: foundWords.includes(word) ? headerColor : wordsBgColor }
-                ]}
-              >
-                <Text style={[
-                  styles.wordBoxText,
-                  foundWords.includes(word) && styles.wordBoxTextFound
-                ]}>
-                  {word}
-                </Text>
-              </View>
-            ))}
-          </View>
-        </View>
-
-        <TouchableOpacity 
-          style={[styles.backButton, { backgroundColor: headerColor }]}
-          onPress={onBack}
-        >
-          <Text style={styles.backButtonText}>REGRESAR</Text>
-        </TouchableOpacity>
+      <View style={styles.timerBar}>
+        <Text style={styles.timerText}>
+          {difficulty !== 'extra' ? `TIEMPO: ${timeLeft} SEG` : `TIEMPO RESTANTE: ${timeLeft} SEG`}
+        </Text>
       </View>
-    </ScrollView>
+
+      <ScrollView 
+        ref={scrollViewRef} 
+        style={styles.scrollContent}
+        contentContainerStyle={styles.scrollContentContainer}
+      >
+        <View style={[styles.gameContent, { backgroundColor: gridBgColor }]}>
+          <View style={styles.gridWrapper}>
+            <View 
+              ref={gridRef}
+              style={styles.gridContainer}
+              onStartShouldSetResponder={() => true}
+              onMoveShouldSetResponder={() => true}
+              onResponderGrant={handleTouchStart}
+              onResponderMove={handleTouchMove}
+              onResponderRelease={handleTouchEnd}
+            >
+              {grid.map((row, rowIdx) => (
+                <View key={rowIdx} style={styles.gridRow}>
+                  {row.map((cell, colIdx) => {
+                    const cellKey = `${rowIdx}-${colIdx}`;
+                    const isSelected = selectedCells.includes(cellKey);
+                    const isFound = foundCells.includes(cellKey);
+                    
+                    return (
+                      <View
+                        key={cellKey}
+                        style={[
+                          styles.gridCell,
+                          isSelected && { backgroundColor: headerColor },
+                          isFound && { backgroundColor: headerColor }
+                        ]}
+                      >
+                        <Text style={styles.gridCellText}>{cell}</Text>
+                      </View>
+                    );
+                  })}
+                </View>
+              ))}
+            </View>
+          </View>
+
+          <View style={styles.wordsSection}>
+            <View style={[styles.wordsSectionHeader, { backgroundColor: wordsBgColor }]}>
+              <Text style={styles.wordsSectionTitle}>PALABRAS A ENCONTRAR:</Text>
+            </View>
+            
+            <View style={[styles.wordsGrid, isExperto && styles.wordsGridExperto]}>
+              {words.map((word, idx) => (
+                <View
+                  key={idx}
+                  style={[
+                    styles.wordBox,
+                    { backgroundColor: foundWords.includes(word) ? headerColor : wordsBgColor }
+                  ]}
+                >
+                  <Text style={[
+                    styles.wordBoxText,
+                    foundWords.includes(word) && styles.wordBoxTextFound
+                  ]}>
+                    {word}
+                  </Text>
+                </View>
+              ))}
+            </View>
+          </View>
+
+          <TouchableOpacity 
+            style={[styles.backButton, { backgroundColor: headerColor }]}
+            onPress={onBack}
+          >
+            <Text style={styles.backButtonText}>REGRESAR</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </View>
   );
 };
 
@@ -584,9 +526,7 @@ export default function App() {
   );
 }
 
-//---------------ESTILO DE SOPITA-----------------------------------------
 const styles = StyleSheet.create({
-  // Menu Styles
   menuContainer: {
     flex: 1,
     backgroundColor: '#64B5F6',
@@ -654,8 +594,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     letterSpacing: 2,
   },
-
-  // Game Styles
   gameContainer: {
     flex: 1,
     backgroundColor: '#1a1a1a',
@@ -681,13 +619,22 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#fff',
   },
+  scrollContent: {
+    flex: 1,
+  },
+  scrollContentContainer: {
+    flexGrow: 1,
+  },
   gameContent: {
     flex: 1,
-    padding: 20,
+    minHeight: '100%',
+    paddingVertical: 20,
+    paddingHorizontal: 20,
     alignItems: 'center',
+    justifyContent: 'space-between',
   },
   gridWrapper: {
-    marginBottom: 25,
+    marginVertical: 15,
   },
   gridContainer: {
     backgroundColor: '#000',
@@ -709,12 +656,6 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: '#333',
   },
-  gridCellSelected: {
-    backgroundColor: '#FFD700',
-  },
-  gridCellFound: {
-    backgroundColor: '#4CAF50',
-  },
   gridCellText: {
     fontSize: 16,
     fontWeight: 'bold',
@@ -723,7 +664,7 @@ const styles = StyleSheet.create({
   wordsSection: {
     width: '100%',
     maxWidth: 380,
-    marginBottom: 25,
+    marginVertical: 15,
   },
   wordsSectionHeader: {
     paddingVertical: 12,
@@ -773,6 +714,8 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
+    marginTop: 15,
+    marginBottom: 20,
   },
   backButtonText: {
     fontSize: 18,
