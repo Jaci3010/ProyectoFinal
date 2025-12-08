@@ -192,6 +192,7 @@ const WordSearchGame: React.FC<WordSearchGameProps> = ({
   
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const gridRef = useRef<View>(null);
+  const scrollViewRef = useRef<ScrollView>(null);
 
   useEffect(() => {
     initGame();
@@ -257,6 +258,11 @@ const WordSearchGame: React.FC<WordSearchGameProps> = ({
 
   const handleTouchStart = (event: any) => {
     if (!isPlaying || !gridRef.current) return;
+    
+    // Deshabilitar scroll del ScrollView
+    if (scrollViewRef.current) {
+      scrollViewRef.current.setNativeProps({ scrollEnabled: false });
+    }
     
     gridRef.current.measure((fx, fy, width, height, px, py) => {
       const touch = event.nativeEvent;
@@ -362,6 +368,11 @@ const WordSearchGame: React.FC<WordSearchGameProps> = ({
   const handleTouchEnd = () => {
     if (!isPlaying || !isDragging) return;
     
+    // Rehabilitar scroll del ScrollView
+    if (scrollViewRef.current) {
+      scrollViewRef.current.setNativeProps({ scrollEnabled: true });
+    }
+    
     setIsDragging(false);
     checkWord(selectedCells);
   };
@@ -395,7 +406,7 @@ const WordSearchGame: React.FC<WordSearchGameProps> = ({
   const isExperto = difficulty === 'experto';
 
   return (
-    <ScrollView style={styles.gameContainer}>
+    <ScrollView ref={scrollViewRef} style={styles.gameContainer}>
       <View style={[styles.gameHeader, { backgroundColor: headerColor }]}>
         <Text style={styles.gameTitle}>{difficulty.toUpperCase()}</Text>
       </View>
@@ -433,8 +444,8 @@ const WordSearchGame: React.FC<WordSearchGameProps> = ({
                       key={cellKey}
                       style={[
                         styles.gridCell,
-                        isSelected && styles.gridCellSelected,
-                        isFound && styles.gridCellFound
+                        isSelected && { backgroundColor: headerColor },
+                        isFound && { backgroundColor: headerColor }
                       ]}
                     >
                       <Text style={styles.gridCellText}>{cell}</Text>
@@ -460,7 +471,7 @@ const WordSearchGame: React.FC<WordSearchGameProps> = ({
                 key={idx}
                 style={[
                   styles.wordBox,
-                  { backgroundColor: foundWords.includes(word) ? '#4CAF50' : wordsBgColor }
+                  { backgroundColor: foundWords.includes(word) ? headerColor : wordsBgColor }
                 ]}
               >
                 <Text style={[
@@ -492,7 +503,7 @@ export default function App() {
     { 
       name: 'NOVATO', 
       words: 3, 
-      time: 45, 
+      time: 40, 
       color: '#FFD700',
       headerColor: '#FFD700',
       gridBgColor: '#FFE87C',
@@ -522,7 +533,7 @@ export default function App() {
     { 
       name: 'EXTRA', 
       words: 15, 
-      time: 15, 
+      time: 20, 
       color: '#9B59B6',
       headerColor: '#9B59B6',
       gridBgColor: '#C19CD9',
