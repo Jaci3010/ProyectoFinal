@@ -65,7 +65,7 @@ interface Difficulty {
   wordsBgColor: string;
   bank: string[];
 }
-
+//Generador de letras
 const generateWordSearch = (words: string[]): string[][] => {
   const grid: string[][] = Array(GRID_SIZE).fill(null).map(() => 
     Array(GRID_SIZE).fill(null).map(() => '')
